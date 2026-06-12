@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📚 북팝업 BookPopup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="bg-bubbles" aria-hidden="true">
+    <span>📖</span><span>✨</span><span>🌸</span><span>⭐</span><span>🍩</span><span>🥜</span>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+      <h1 class="logo">📚 북팝업 <span>BookPopup</span></h1>
+      <p class="tagline">🌈 알라딘과 함께하는 귀여운 도서 탐험!</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- 베스트셀러 슬라이드 -->
+    <section class="section bestseller-section" aria-labelledby="bestseller-title">
+      <div class="section-header">
+        <h2 id="bestseller-title">🏆 이번 주 베스트셀러</h2>
+        <p class="section-desc">인기 폭발! 지금 가장 핫한 책들을 만나보세요 🔥</p>
+      </div>
+      <div class="slider-wrap">
+        <button type="button" class="btn-icon slider-btn prev-btn" id="bestseller-prev" aria-label="이전 책">◀</button>
+        <div class="slider-viewport" id="bestseller-viewport">
+          <div class="slider-track" id="bestseller-track"></div>
+        </div>
+        <button type="button" class="btn-icon slider-btn next-btn" id="bestseller-next" aria-label="다음 책">▶</button>
+      </div>
+      <div class="slider-dots" id="bestseller-dots"></div>
+    </section>
+
+    <!-- 검색 -->
+    <section class="section search-section" aria-labelledby="search-title">
+      <div class="section-header">
+        <h2 id="search-title">🔍 도서 검색</h2>
+        <p class="section-desc">원하는 책을 찾아보세요! 🎯</p>
+      </div>
+
+      <div class="search-type-tabs" role="radiogroup" aria-label="검색 방식">
+        <label class="search-tab">
+          <input type="radio" name="searchType" value="Keyword" checked>
+          <span>🔑 키워드</span>
+        </label>
+        <label class="search-tab">
+          <input type="radio" name="searchType" value="Title">
+          <span>📕 도서명</span>
+        </label>
+        <label class="search-tab">
+          <input type="radio" name="searchType" value="Author">
+          <span>✍️ 저자명</span>
+        </label>
+      </div>
+
+      <form class="search-form" id="search-form">
+        <div class="search-input-wrap">
+          <span class="search-emoji" id="search-emoji">🔑</span>
+          <input
+            type="search"
+            id="search-input"
+            class="search-input"
+            placeholder="검색어를 입력해 주세요..."
+            autocomplete="off"
+            required
+          >
+        </div>
+        <button type="submit" class="btn btn-primary" id="search-btn">
+          <span class="btn-text">검색하기 🚀</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- 검색 결과 -->
+    <section class="section results-section hidden" id="results-section" aria-live="polite">
+      <div id="results-container"></div>
+    </section>
+  </main>
+
+  <!-- 도서 상세 모달 -->
+  <div class="modal-overlay hidden" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <div class="modal-card">
+      <button type="button" class="btn-icon modal-close" id="modal-close" aria-label="닫기">✕</button>
+      <div class="detail-content" id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- 로딩 오버레이 (도넛 & 피넛) -->
+  <div class="loading-overlay hidden" id="loading-overlay" aria-live="polite" aria-busy="true">
+    <div class="loading-scene">
+      <div class="donut-loader" aria-hidden="true">
+        <div class="donut-ring"></div>
+        <div class="donut-hole">🍩</div>
+      </div>
+      <div class="peanut-loader" aria-hidden="true">
+        <span class="peanut">🥜</span>
+        <span class="peanut">🥜</span>
+        <span class="peanut">🥜</span>
+      </div>
+      <p class="loading-text">책을 찾는 중이에요... 📚✨</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Made with 💖 for curious readers · Powered by Aladin Open API</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
