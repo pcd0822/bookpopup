@@ -55,6 +55,51 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+const GENERIC_CATEGORIES = new Set(["국내도서", "외국도서", "eBook", "음반", "DVD"]);
+
+function splitCategorySegments(path) {
+  return path
+    .split(">")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((s) => !GENERIC_CATEGORIES.has(s));
+}
+
+function getTopCategories(item, limit = 3) {
+  const paths = item.categoryIdList?.length
+    ? item.categoryIdList.map((c) => c.categoryName)
+    : item.categoryName
+      ? [item.categoryName]
+      : [];
+
+  if (!paths.length) return [];
+
+  const freq = new Map();
+  paths.forEach((path) => {
+    splitCategorySegments(path).forEach((segment) => {
+      freq.set(segment, (freq.get(segment) || 0) + 1);
+    });
+  });
+
+  const ranked = [...freq.entries()].sort((a, b) => b[1] - a[1] || b[0].length - a[0].length);
+
+  if (ranked.length) {
+    return ranked.slice(0, limit).map(([name]) => name);
+  }
+
+  const fallback = splitCategorySegments(paths[0]);
+  return fallback.slice(-limit);
+}
+
+function formatCategoryHtml(item) {
+  const top = getTopCategories(item);
+  if (!top.length) return "분류 정보 없음";
+
+  return top
+    .map((cat, i) => (i === 0 ? escapeHtml(cat) : `· ${escapeHtml(cat)}`))
+    .join("<br>");
+}
+
 /* ===== Bestseller Slider ===== */
 async function loadBestsellers() {
   showLoading();
@@ -291,10 +336,7 @@ async function openBookDetail(itemId) {
 }
 
 function renderDetailModal(item) {
-  const categories = item.categoryIdList
-    ? item.categoryIdList.map((c) => c.categoryName).join(" · ")
-    : item.categoryName || "분류 정보 없음";
-
+  const categoriesHtml = formatCategoryHtml(item);
   const description = item.description || "줄거리 정보가 없어요 📭";
   const page = getItemPage(item);
 
@@ -309,7 +351,7 @@ function renderDetailModal(item) {
           ${page ? `<div class="detail-meta-item"><strong>📄 페이지</strong><span>${page}쪽</span></div>` : ""}
           <div class="detail-meta-item"><strong>📅 출간</strong><span>${escapeHtml(item.pubDate || "미정")}</span></div>
         </div>
-        <div class="detail-category">🏷️ ${escapeHtml(categories)}</div>
+        <div class="detail-category">🏷️<br>${categoriesHtml}</div>
         <div class="detail-desc">
           <strong>📝 줄거리</strong><br><br>
           ${escapeHtml(description)}
